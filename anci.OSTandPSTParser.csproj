@@ -65,8 +65,8 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Inputs\IInputFormat.cs" />
-    <Compile Include="Inputs\IInputPST.cs" />
+    <Compile Include="InputFormats\IInputFormat.cs" />
+    <Compile Include="InputFormats\IInputPST.cs" />
     <Compile Include="OutputFormats\IOutputFormat.cs" />
     <Compile Include="OutputFormats\OutputMSG.cs" />
     <Compile Include="OutputFormats\OutputPST.cs" />
