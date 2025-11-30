@@ -1,5 +1,9 @@
-﻿using System;
+﻿using anci.OSTandPSTParser.Inputs;
+using Aspose.Email;
+using Aspose.Email.Mapi;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,19 +13,55 @@ namespace anci.OSTandPSTParser.OutputFormats
 {
     internal class OutputMSG : IOutputFormat
     {
+        public OutputMSG(string folderDest, IInputFormat provider)
+        {
+            InputProvider = provider;
+            Open(DestinationFolder);
+        }
+
+        public String DestinationFolder { get; private set; }
+        public MsgSaveOptions FileSaveFormat = SaveOptions.DefaultMsgUnicode;
+
         internal override void Close()
         {
-            throw new NotImplementedException();
+
         }
 
-        internal override void Open(string filename)
+        internal override void Open(string folderName)
         {
-            throw new NotImplementedException();
+            if (!Directory.Exists(folderName))
+            {
+                Directory.CreateDirectory(folderName);
+            }
+
+            DestinationFolder = folderName;
         }
 
-        internal override void SaveFolder(TreeNode node)
+        internal override void SaveFolder(List<String> foldersTree, List<MapiMessage> fileMsg)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < foldersTree.Count; i++) {
+                foldersTree[i] = CheckForInvalidChars(foldersTree[i]);
+            }
+
+            //String[] full = [DestinationFolder, ..(foldersTree.ToArray())];
+            String newFullPath = Path.Combine(foldersTree.ToArray());
+            newFullPath = Path.Combine(DestinationFolder, newFullPath);
+
+            foreach (MapiMessage message in fileMsg) {
+                String newFileName = Path.Combine(newFullPath, CheckForInvalidChars(message.Subject));
+
+                message.Save(newFileName, FileSaveFormat);
+            }
+        }
+
+        private string CheckForInvalidChars(string originalString)
+        {
+            if (!string.IsNullOrEmpty(originalString))
+            {
+                return string.Join("_", originalString.Split(Path.GetInvalidFileNameChars()));
+            }
+
+            return originalString;
         }
     }
 }

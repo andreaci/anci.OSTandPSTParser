@@ -16,6 +16,10 @@ namespace anci.OSTandPSTParser
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+
+            Application.Run(new DisclaimerForm());
+
             Application.Run(new Form1());
         }
     }

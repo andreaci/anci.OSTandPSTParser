@@ -4,10 +4,6 @@ using anci.OSTandPSTParser.Inputs;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace anci.OSTandPSTParser.OutputFormats
 {
@@ -21,7 +17,6 @@ namespace anci.OSTandPSTParser.OutputFormats
 
         private PersonalStorage DataFile { get; set; }
 
-        public IInputFormat InputProvider { get; set; }
 
         internal override void Open(string filename)
         {
@@ -31,27 +26,8 @@ namespace anci.OSTandPSTParser.OutputFormats
                 DataFile = PersonalStorage.Create(filename, FileFormatVersion.Unicode);
         }
 
-        internal override void SaveFolder(TreeNode node)
-        {
-            List<String> nodePath = node.GetNamesPath();
-            nodePath = nodePath.Skip(1).Select(n => n.Split('|')[1]).ToList();
 
-            FolderInfo folder = InputProvider.GetFolderById(node.Name.Split('|')[0]);
-
-            MessageInfoCollection messages = folder.GetContents();
-
-            List<MapiMessage> messagesList = new List<MapiMessage>();
-            foreach (MessageInfo message in messages)
-            {
-                MapiMessage mapiTemp = InputProvider.ExtractMessage(message);
-                messagesList.Add(mapiTemp);
-            }
-
-            Save(nodePath, messagesList);
-        }
-
-
-        internal void Save(List<String> foldersTree, List<MapiMessage> fileMsg)
+        internal override void SaveFolder(List<String> foldersTree, List<MapiMessage> fileMsg)
         {
             FolderInfo inboxFolder = DataFile.RootFolder;
             foreach (String folder in foldersTree)

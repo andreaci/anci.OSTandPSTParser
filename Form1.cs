@@ -63,8 +63,10 @@ namespace anci.OSTandPSTParser
 
                 List<TreeNode> selectedNodes = treeView1.GetAllCheckedNodes();
 
+                int i = 0;
                 foreach (TreeNode node in selectedNodes)
                 {
+                    labelState.Text = $"[{++i}/{selectedNodes}] Now exporting \"{node.Text}\"";
                     outputFile.SaveFolder(node);
                 }
 
@@ -80,6 +82,11 @@ namespace anci.OSTandPSTParser
                 if (e.Node.Nodes.Count > 0)
                     e.Node.CheckAllChildNodes(e.Node.Checked);
             }
+        }
+
+        private void labelState_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
